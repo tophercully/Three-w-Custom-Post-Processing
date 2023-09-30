@@ -152,7 +152,7 @@ mat2 rotate(float angle){
 
 
 
-// uniform texture2D p;
+uniform texture2D p;
 varying vec2 vUv;
 
 

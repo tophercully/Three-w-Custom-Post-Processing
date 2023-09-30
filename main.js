@@ -23,6 +23,8 @@ var options = {
     };
 const p = new THREE.WebGLRenderTarget(w, h, options)
 
+const pToShader = p
+
 //simple materials
 const normal = new THREE.MeshNormalMaterial();
 const basic = new THREE.MeshPhongMaterial({color: 'white'})
@@ -60,9 +62,9 @@ renderer.render( pScene, camera, p );
 
 //shader setup
 const uniforms = {
-    p: {vec4: p },
+    'p': {value: p },
     // p: { type: "sampler2D", value: p },
-    u_resolution: {vec2: [w, h]},
+    'u_resolution': {vec2: [w, h]},
 };
 
 // create URL for './test.frag' and load it
