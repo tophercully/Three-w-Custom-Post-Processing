@@ -71,81 +71,93 @@ mat2 rotate(float angle){
 }
 
 
-void main() {
-  vec2 uv = vTexCoord*u_resolution;
-  vec2 st = vTexCoord;
-  vec2 stDebug = vTexCoord;
-  vec2 stB = vTexCoord;
-  vec2 stPaper = vTexCoord;
+// void main() {
+//   vec2 uv = vTexCoord*u_resolution;
+//   vec2 st = vTexCoord;
+//   vec2 stDebug = vTexCoord;
+//   vec2 stB = vTexCoord;
+//   vec2 stPaper = vTexCoord;
 
-  //flip the upside down image
-  st.y = 1.0 - st.y;
-  stB.y = 1.0 - stB.y;
-  stDebug.y = 1.0 - stDebug.y;
+//   //flip the upside down image
+//   st.y = 1.0 - st.y;
+//   stB.y = 1.0 - stB.y;
+//   stDebug.y = 1.0 - stDebug.y;
 
-  //form noise
-  // st.xy += map(random(st.xy), 0.0, 1.0, -0.005, 0.005);
-
-  
-  if(lastPass == true) {
-    //shrink stB so there is margin
-    stB.x = map(st.x, 0.0, 1.0, -marg, 1.0+marg);
-    stB.y = map(st.y, 0.0, 1.0, -(marg*0.8), 1.0+(marg*0.8));
-  }
-  
-  
-  //pull in our main textures
-  vec4 texC = texture2D(c, st);
-  vec4 texG = texture2D(g, st);
-  vec4 texP = texture2D(p, st);
-  vec4 texB = texture2D(b, st);
-
-
-  //create hatching
-  //direction
-  float dir = texC.r*6.289;
-  st *= rotate(dir);
-  //density
-  float dens = map(texC.g, 0.0, 1.0, -1.0, 1.0); 
-  //color  
-  //map luminance as a y value on our gradient
-  vec2 lum = vec2(0.5, texC.b);
-  //pick the color off of g based on luminance
-  vec4 colVal = texture2D(g, lum);
-
-  //initialize color
-  vec3 color = vec3(0.0);
-
-  //sine controls
-  float hatchDensX = map(texB.r, 0.0, 1.0, 10.0, 2000.0);
-  float hatchSineX = sin(st.x * hatchDensX);
-
-  float hatchDensY = map(texB.r, 0.0, 1.0, 1.0, 150.0);
-  float hatchSineY = sin(st.y*hatchDensY);
-
-  if(hatchSineX < dens && hatchSineY < 0.9 && texC.rgb != vec3(0.0)) {
-    color = vec3(0.0);//mix(vec3(0.0), bgc.rgb, map(pow(texC.b, 0.7), 0.0, pow(1.0, 0.7), 1.0, 0.1));
-  } else {
-    color = bgc.rgb;
-  }
-
-  // color = colVal.rgb;
-
+//   //form noise
+//   // st.xy += map(random(st.xy), 0.0, 1.0, -0.005, 0.005);
 
   
-  //only apply color on the last pass, keep image black and white for now
+//   if(lastPass == true) {
+//     //shrink stB so there is margin
+//     stB.x = map(st.x, 0.0, 1.0, -marg, 1.0+marg);
+//     stB.y = map(st.y, 0.0, 1.0, -(marg*0.8), 1.0+(marg*0.8));
+//   }
   
-  // if(lastPass == true) {
-  //   color = colVal.rgb;
-  // } else {
+  
+//   //pull in our main textures
+//   vec4 texC = texture2D(c, st);
+//   vec4 texG = texture2D(g, st);
+//   vec4 texP = texture2D(p, st);
+//   vec4 texB = texture2D(b, st);
+
+
+//   //create hatching
+//   //direction
+//   float dir = texC.r*6.289;
+//   st *= rotate(dir);
+//   //density
+//   float dens = map(texC.g, 0.0, 1.0, -1.0, 1.0); 
+//   //color  
+//   //map luminance as a y value on our gradient
+//   vec2 lum = vec2(0.5, texC.b);
+//   //pick the color off of g based on luminance
+//   vec4 colVal = texture2D(g, lum);
+
+//   //initialize color
+//   vec3 color = vec3(0.0);
+
+//   //sine controls
+//   float hatchDensX = map(texB.r, 0.0, 1.0, 10.0, 2000.0);
+//   float hatchSineX = sin(st.x * hatchDensX);
+
+//   float hatchDensY = map(texB.r, 0.0, 1.0, 1.0, 150.0);
+//   float hatchSineY = sin(st.y*hatchDensY);
+
+//   if(hatchSineX < dens && hatchSineY < 0.9 && texC.rgb != vec3(0.0)) {
+//     color = vec3(0.0);//mix(vec3(0.0), bgc.rgb, map(pow(texC.b, 0.7), 0.0, pow(1.0, 0.7), 1.0, 0.1));
+//   } else {
+//     color = bgc.rgb;
+//   }
+
+//   // color = colVal.rgb;
+
+
+  
+//   //only apply color on the last pass, keep image black and white for now
+  
+//   // if(lastPass == true) {
+//   //   color = colVal.rgb;
+//   // } else {
     
-  // }
+//   // }
 
-  //Draw margin, use 0 and 1 since we shrunk stB
-  if(stB.x <= 0.0 || stB.x >= 1.0 || stB.y <= 0.0 || stB.y >= 1.0) {
-    // color = bgc;
-  }
+//   //Draw margin, use 0 and 1 since we shrunk stB
+//   if(stB.x <= 0.0 || stB.x >= 1.0 || stB.y <= 0.0 || stB.y >= 1.0) {
+//     // color = bgc;
+//   }
 
-  // color = texC.rgb;
-  gl_FragColor = vec4(1.0, 0.1, 0.1, 1.0);//vec4(color, 1.0);
+//   // color = texC.rgb;
+//   gl_FragColor = vec4(1.0, 0.1, 0.1, 1.0);//vec4(color, 1.0);
+// }
+
+
+
+// uniform texture2D p;
+varying vec2 vUv;
+
+
+void main()	{
+  vec3 color = vec3(0.9);
+  gl_FragColor = vec4(color.r, color.g, color.b, 1.0);//vec4( vec3( f * i / 1.6, i / 2.0 + d / 13.0, i ) * d * p.x + vec3( i / 1.3 + d / 8.0, i / 2.0 + d / 18.0, i ) * d * ( 1.0 - p.x ), 1.0 );
+
 }

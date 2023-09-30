@@ -125,6 +125,10 @@ function average(array) {
   });
   return sum / array.length;
 }
+
+// function loadTextFile(url) {
+//   return fetch(url).then(response => response.text());
+// }
 ////////////////////////////////////////
 
 function gradLUT() {

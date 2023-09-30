@@ -1,7 +1,8 @@
 
 
 // init
-import * as THREE from '/node_modules/three/'
+import * as THREE from 'three'
+THREE.Cache.enabled = true;
 //Base setup
 const w = 1600
 const h = 2000
@@ -11,7 +12,16 @@ camera.position.z = 1;
 
 const scene = new THREE.Scene();
 const pScene = new THREE.Scene()
-const p = new THREE.WebGLRenderTarget(w, h)
+
+var options = {
+		
+    minFilter : THREE.LinearFilter,
+        magFilter : THREE.LinearFilter,
+        format : THREE.RGBAFormat,
+        type : /(iPad|iPhone|iPod)/g.test(navigator.userAgent) ? THREE.HalfFloatType : 
+                THREE.FloatType
+    };
+const p = new THREE.WebGLRenderTarget(w, h, options)
 
 //simple materials
 const normal = new THREE.MeshNormalMaterial();
@@ -50,27 +60,36 @@ renderer.render( pScene, camera, p );
 
 //shader setup
 const uniforms = {
-    texP: {vec4: p },
-    // texture2: { type: "sampler2D", value: texture2 },
+    p: {vec4: p },
+    // p: { type: "sampler2D", value: p },
     u_resolution: {vec2: [w, h]},
 };
 
+// create URL for './test.frag' and load it
+var vertUrl = new URL('./shader.vert', import.meta.url);
+var vertResponse = await fetch(vertUrl);
+var vertSource = await vertResponse.text(); // these are the contents of './test.frag' as a string
+//repeat for frag
+// create URL for './test.frag' and load it
+var fragUrl = new URL('./shader.frag', import.meta.url);
+var fragResponse = await fetch(fragUrl);
+var fragSource = await fragResponse.text(); // these are the contents of './test.frag' as a string
+//repeat for frag
+// var fragSource = loadTextFile()
+
 const shaderMaterial = new THREE.ShaderMaterial({
-    // uniforms: {time: {value: 1.0}, u_resolution: {vec2: [w, h]}},
     uniforms: uniforms,
-    vertexShader: document.getElementById( 'vert' ).src.textContext,
-	fragmentShader: document.getElementById( 'frag' ).src.textContext
+    vertexShader: vertSource,
+	fragmentShader: fragSource
 })
 var pMaterial = new THREE.MeshBasicMaterial({map:pScene});
-
-// var testMaterial = new THREE.Material({dithering:true})
 
 //plane to render to
 scene.add(light);
 scene.add(light.target);
 scene.add(ambient)
 
-const planeGeo = new THREE.BoxGeometry(2, 2, 2)
+const planeGeo = new THREE.PlaneGeometry(2, 2)
 let plane = new THREE.Mesh(planeGeo, shaderMaterial)
 plane.position.z = -0.5
 scene.add(plane)
