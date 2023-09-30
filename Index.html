@@ -375,21 +375,21 @@
         <div id="p5_loading"></div>
       </div>
     </main>
-    <!-- <script id="vertexShader" type="x-shader/x-vertex">
-
+    <script id="vertexShader" type="x-shader/x-vertex">
+      uniform sampler2D p;
 			varying vec2 vUv;
 
 			void main()	{
 
 				vUv = uv;
-
+        vec4 texP = texture2D(p, vUv);
 				gl_Position = vec4( position, 1.0 );
 
 			}
 
-		</script> -->
+		</script>
 
-		<!-- <script id="fragmentShader" type="x-shader/x-fragment">
+		<script id="fragmentShader" type="x-shader/x-fragment">
       uniform p;
 			varying vec2 uv;
 
@@ -406,20 +406,8 @@
 
 			}
 
-		</script> -->
-    <!-- <script src="p5.js"></script> -->
-    <script id="frag" type="x-shader/x-fragment" src="shader.frag"></script>
-    <script id="vert" type="x-shader/x-vertex" src="shader.vert"></script>
-    <script type="importmap">
-			{
-				"imports": {
-					"three": "../build/three.module.js",
-					"three/addons/": "./jsm/"
-				}
-			}
 		</script>
-    <!-- <script src="js/three.js"></script> -->
-    <!-- <script type='module' src="js/EffectComposer.js"></script> -->
+    
     <script src="chroma.min.js"></script>
     <script src="tools.js"></script>
     <script src="color.js"></script>

@@ -17,7 +17,7 @@
 //   gl_Position = positionVec4;
 // }
 
-
+uniform vec2 u_resolution;
 varying vec2 vUv;
 
 			void main()	{

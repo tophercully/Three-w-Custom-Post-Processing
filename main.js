@@ -14,16 +14,13 @@ const scene = new THREE.Scene();
 const pScene = new THREE.Scene()
 
 var options = {
-		
     minFilter : THREE.LinearFilter,
-        magFilter : THREE.LinearFilter,
-        format : THREE.RGBAFormat,
-        type : /(iPad|iPhone|iPod)/g.test(navigator.userAgent) ? THREE.HalfFloatType : 
-                THREE.FloatType
-    };
+    magFilter : THREE.LinearFilter,
+};
 const p = new THREE.WebGLRenderTarget(w, h, options)
 
-const pToShader = p
+const loader = new THREE.ImageLoader()
+const testBuff = loader.load('test.png')
 
 //simple materials
 const normal = new THREE.MeshNormalMaterial();
@@ -47,24 +44,31 @@ pScene.add(ambient)
 
 
 let spheres = []
+let sphereParams = {
+    widthSegments: 64,
+    heightSegments:32,
+}
 for(let i = 0; i < 100; i++) {
     let that = new THREE.SphereGeometry(rv(0.05, 0.2))
+    that.widthSegments = 64
+    that.heightSegments = 32
     spheres[i] = new THREE.Mesh(that, basic)
     pScene.add(spheres[i])
     spheres[i].position.x = rv(-0.5, 0.5)
     spheres[i].position.y = rv(-0.5, 0.5)
     spheres[i].position.z = rv(0, -1)
 }
-
-renderer.render( pScene, camera, p );
+renderer.setRenderTarget(p)
+renderer.render( pScene, camera);
 //buffer rendered
 
 
 //shader setup
 const uniforms = {
-    'p': {value: p },
-    // p: { type: "sampler2D", value: p },
-    'u_resolution': {vec2: [w, h]},
+    // 'p': {value: testBuff },
+    'p': { type: "sampler2D", value: p.texture },
+
+    'u_resolution': { value: new THREE.Vector2( w, h ) },
 };
 
 // create URL for './test.frag' and load it
@@ -98,6 +102,7 @@ scene.add(plane)
 
 
 //canvas render
+renderer.setRenderTarget(null)
 renderer.render( scene, camera)
 
 
